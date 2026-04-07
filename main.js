@@ -20,8 +20,7 @@ Actor.main(async () => {
     }
 
     const store = await Actor.openKeyValueStore('photos');
-    const storeInfo = await store.getInfo();
-    const storeId = storeInfo.id;
+    const storeId = store.id;
 
     let successCount = 0;
     let failCount = 0;
