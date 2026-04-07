@@ -1,12 +1,3 @@
-/**
- * LinkedIn Photo Downloader
- * 
- * Input: LinkedIn profile photo URLs (the media.licdn.com ones)
- * Output: Downloaded image files in the key-value store
- * 
- * URL in, file out. That's it.
- */
-
 const { Actor } = require('apify');
 
 Actor.main(async () => {
@@ -14,7 +5,6 @@ Actor.main(async () => {
     
     let urls = [];
     
-    // Accept URLs as array of strings or array of objects with url + id
     if (input.urls && input.urls.length > 0) {
         urls = input.urls.map((u, i) => {
             if (typeof u === 'string') return { url: u, id: `photo_${i + 1}` };
@@ -30,6 +20,9 @@ Actor.main(async () => {
     }
 
     const store = await Actor.openKeyValueStore('photos');
+    const storeInfo = await store.getInfo();
+    const storeId = storeInfo.id;
+
     let successCount = 0;
     let failCount = 0;
 
@@ -54,13 +47,14 @@ Actor.main(async () => {
             const buffer = Buffer.from(await response.arrayBuffer());
             const contentType = response.headers.get('content-type') || 'image/jpeg';
             
-            // Save to key-value store as image file
             await store.setValue(id, buffer, { contentType });
             
-            // Push metadata to dataset
+            const downloadUrl = `https://api.apify.com/v2/key-value-stores/${storeId}/records/${id}`;
+            
             await Actor.pushData({
                 id,
                 originalUrl: url,
+                downloadUrl,
                 contentType,
                 sizeBytes: buffer.length,
                 status: 'success'
@@ -74,6 +68,7 @@ Actor.main(async () => {
             await Actor.pushData({
                 id,
                 originalUrl: url,
+                downloadUrl: null,
                 contentType: null,
                 sizeBytes: 0,
                 status: 'failed',
@@ -83,12 +78,10 @@ Actor.main(async () => {
             failCount++;
         }
 
-        // Small delay between downloads
         if (i < urls.length - 1) {
             await new Promise(r => setTimeout(r, 500));
         }
     }
 
     console.log(`\nDone. ${successCount} downloaded, ${failCount} failed.`);
-    console.log('Photos stored in key-value store "photos".');
 });
