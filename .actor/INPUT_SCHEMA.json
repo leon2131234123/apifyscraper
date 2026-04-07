@@ -1,0 +1,21 @@
+{
+    "title": "LinkedIn Photo Downloader",
+    "description": "Paste LinkedIn profile photo URLs (media.licdn.com). Get back image files.",
+    "type": "object",
+    "schemaVersion": 1,
+    "properties": {
+        "urls": {
+            "title": "Photo URLs",
+            "type": "array",
+            "description": "LinkedIn profile photo URLs (the media.licdn.com ones). Can be strings or objects with {url, id}.",
+            "editor": "json",
+            "prefill": [
+                {
+                    "url": "https://media.licdn.com/dms/image/v2/D5603AQF-RYZP55jmXA/profile-displayphoto-shrink_200_200/B56ZRi8g.aGsAY-/0/1736826818802?e=1776902400&v=beta&t=JzsmWpiMcr9SHc-itVdo1H7W1JAOzSMGmQtGdURnKbs",
+                    "id": "bill_gates"
+                }
+            ]
+        }
+    },
+    "required": ["urls"]
+}

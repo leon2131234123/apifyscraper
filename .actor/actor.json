@@ -1,0 +1,9 @@
+{
+    "actorSpecification": 1,
+    "name": "linkedin-photo-scraper",
+    "title": "LinkedIn Profile Photo Scraper",
+    "description": "Takes LinkedIn profile photo URLs (media.licdn.com), downloads them, stores as image files. URL in, file out.",
+    "version": "0.1",
+    "input": "./INPUT_SCHEMA.json",
+    "dockerfile": "./Dockerfile"
+}
